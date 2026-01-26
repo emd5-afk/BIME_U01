@@ -1,0 +1,71 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+.venv
+*.egg-info/
+dist/
+build/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+*/.ipynb_checkpoints/*
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# R
+.Rhistory
+.RData
+.Rproj.user
+
+# Data files (large)
+*.csv
+*.tsv
+*.xlsx
+*.xls
+
+# Miniconda
+miniconda3/
+Miniconda3-*.sh
+
+# Credentials and secrets
+*password*
+*credentials*
+*secret*
+.env
+
+# Output directories
+output_graphs/
+
+# System files
+.DS_Store
+Thumbs.db
+*.log
+
+# SSH keys
+.ssh/
+
+# Cache directories
+.cache/
+.conda/
+.config/
+.dotnet/
+.ipython/
+.nv/
+.vscode-remote-containers/
+.vscode-server/
+.vscode-R/
+.anaconda/
+
+# Other
+.bash_history
+.wget-hsts
