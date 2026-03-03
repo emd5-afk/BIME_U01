@@ -235,6 +235,10 @@ def decode_variable_name(var_name):
             return 'Medium Resource Access'
         if var_name == 'resource_access_score':
             return 'Resource Access Score'
+        if var_name == 'low_resource_access':
+            return 'Low Resource Access'
+        if var_name == 'low_healthcare_access':
+            return 'Low Healthcare Access'
 
         # Handle urban/rural categories
         if var_name == 'urban_rural_LargeRuralTrue':
