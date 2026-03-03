@@ -58,6 +58,9 @@ data_dictionary = {
         2: 'Associates to Bachelors',  # Original codes 5.0, 6.0
         3: 'Masters and above'         # Original codes 7.0, 8.0
     },
+    'opioids.opiates': {
+        1: 'Opioids or Opiates Use'
+    },
     'STATEFP': {
         1: 'Alabama', 2: 'Alaska', 4: 'Arizona', 5: 'Arkansas', 6: 'California',
         8: 'Colorado', 9: 'Connecticut', 10: 'Delaware', 11: 'District of Columbia',
@@ -199,6 +202,52 @@ def decode_variable_name(var_name):
             return 'SVI: Minority Status/Language'
         if var_name == 'RPL_THEME4':
             return 'SVI: Housing/Transportation'
+
+        # Handle the boolean SVI high vulnerability flags per RLP_THEME
+        if var_name == 'svi_theme1_high':
+            return 'High SVI: Socioeconomic Status'
+        if var_name == 'svi_theme2_high':
+            return 'High SVI: Household Composition'
+        if var_name == 'svi_theme3_high':
+            return 'High SVI: Minority Status/Language'
+        if var_name == 'svi_theme4_high':
+            return 'High SVI: Housing/Transportation'
+
+        # Handle SVI category variables
+        if var_name == 'svi_categoryLow Vulnerability':
+            return 'SVI Overall: Low Vulnerability'
+        if var_name == 'svi_categoryMedium Vulnerability':
+            return 'SVI Overall: Medium Vulnerability'
+
+        # Handle healthcare access
+        if var_name == 'healthcare_access_categoryLow Healthcare Access':
+            return 'Low Healthcare Access'
+        if var_name == 'healthcare_access_categoryMedium Healthcare Access':
+            return 'Medium Healthcare Access'
+        if var_name == 'healthcare_access_score':
+            return 'Healthcare Access Score'
+
+        # Handle resource access
+        if var_name == 'resource_access_categoryLow Resource Access':
+            return 'Low Resource Access'
+        if var_name == 'resource_access_categoryMedium Resource Access':
+            return 'Medium Resource Access'
+        if var_name == 'resource_access_score':
+            return 'Resource Access Score'
+
+        # Handle urban/rural categories
+        if var_name == 'urban_rural_LargeRuralTrue':
+            return 'Large Rural'
+        if var_name == 'urban_rural_SmallTownRuralTrue':
+            return 'Small Town Rural'
+        if var_name == 'urban_rural_SuburbanTrue':
+            return 'Suburban'
+        if var_name == 'is_urban':
+            return 'is_urban'
+        
+        # Handle cluster
+        if var_name == 'cluster':
+            return 'cluster'
         
         # Handle clinical measures
         if 'phq9' in var_name.lower():
@@ -209,8 +258,8 @@ def decode_variable_name(var_name):
             return 'SCL Global Score'
         
         # Handle substance use
-        if 'opioids-opiates' in var_name.lower() or 'opioids_opiates' in var_name.lower():
-            return 'Opioids/Opiates Use'
+        if 'opioids-opiates' in var_name.lower() or 'opioids_opiates' in var_name.lower() or 'opioids.opiates' in var_name.lower():
+            return 'Opioids or Opiates Use'
         if var_name == 'marijuana':
             return 'Marijuana Use'
         if var_name == 'alcohol':
