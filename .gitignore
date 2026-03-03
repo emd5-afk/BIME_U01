@@ -32,7 +32,6 @@ build/
 *.tsv
 *.xlsx
 *.xls
-*.png
 
 # Miniconda
 miniconda3/
@@ -73,4 +72,12 @@ Thumbs.db
 .wget-hsts
 
 # Analysis plots
-*.png
+cluster_distribution_summary.png
+geographic_svi_distributions_summary.png
+stratification_distributions.png
+variable_counts_distribution.png
+variable_counts_missing_data.png
+wer_by_age_boxplot.png
+wer_by_demographics_boxplots.png
+wer_by_gender_boxplot.png
+wer_by_race_boxplot.png
