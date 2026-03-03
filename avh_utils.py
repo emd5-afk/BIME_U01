@@ -176,11 +176,12 @@ def decode_variable_name(var_name):
     if var_name == 'pid':
         return 'Participant ID'
     if var_name == 'snr':
-        return 'SNR'
+        return 'Signal-to-Noise Ratio (SNR)'
     if var_name == 'pred_mos':
         return 'Predicted MOS'
     if var_name == 'pause_proportion':
         return 'Pause Proportion'
+    
     
     # Handle response variables
     if isinstance(var_name, str):
@@ -244,7 +245,15 @@ def decode_variable_name(var_name):
             return 'Suburban'
         if var_name == 'is_urban':
             return 'is_urban'
-        
+        if var_name == 'urban_rural_categorySmallTownRural':
+            return 'Small Town Rural'
+        if var_name == 'urban_rural_categorySuburban':
+            return 'Suburban'
+        if var_name == 'urban_rural_categoryUnknown':
+            return 'Unknown Urban/Rural Category'
+        if var_name == 'urban_rural_categoryUrbanCore':
+            return 'Urban Core'
+
         # Handle cluster
         if var_name == 'cluster':
             return 'cluster'

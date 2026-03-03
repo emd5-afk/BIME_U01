@@ -1,12 +1,12 @@
 {
-  "socketPath": "/tmp/mcp-HE5qOq/mcp.sock",
+  "socketPath": "/tmp/mcp-SIxlk8/mcp.sock",
   "scheme": "unix",
   "headers": {
-    "Authorization": "Nonce 74f55f7b-9e1d-4f8c-b4f9-e81454267a00"
+    "Authorization": "Nonce 11e2f21b-9df4-4dce-aee9-4927d23b64c8"
   },
-  "pid": 815138,
+  "pid": 902542,
   "ideName": "Visual Studio Code",
-  "timestamp": 1772507931342,
+  "timestamp": 1772559438923,
   "workspaceFolders": [
     "/edata/obdw/sandwich_analysis_data"
   ],
