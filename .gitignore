@@ -32,6 +32,7 @@ build/
 *.tsv
 *.xlsx
 *.xls
+*.png
 
 # Miniconda
 miniconda3/
@@ -70,3 +71,6 @@ Thumbs.db
 # Other
 .bash_history
 .wget-hsts
+
+# Analysis plots
+*.png
