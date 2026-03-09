@@ -171,7 +171,7 @@ write.csv(results_coh, "/edata/obdw/sandwich_analysis_data/location_encoded_anal
 location_stratified_df = read.csv("/edata/obdw/sandwich_analysis_data/X_basic_plus_clin_sdh_location_stratified.csv")
 location_stratified_df <- subset(location_stratified_df, select = -c(X))
 
-model <- lm(log_wer ~ . - sentCoherenceSentBertCumulativeCentroid - snr - wer, data=location_stratified_df);
+model <- lm(log_wer ~ . - sentCoherenceSentBertCumulativeCentroid - wer, data=location_stratified_df);
 results_wer <- coeftest(model, vcov=vcovCL(model, cluster=~pid))
 # results_wer_with_counts <- add_obs_counts(results_wer, location_stratified_df)
 # print(results_wer_with_counts)
@@ -626,4 +626,3 @@ cat("\n", rep("=", 80), "\n", sep="")
 cat("MIXED MODEL ANALYSIS COMPLETE\n")
 cat("Results saved to /edata/obdw/sandwich_analysis_data/\n")
 cat(rep("=", 80), "\n", sep="")
-
