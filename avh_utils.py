@@ -273,6 +273,8 @@ def decode_variable_name(var_name):
         # Handle substance use
         if 'opioids-opiates' in var_name.lower() or 'opioids_opiates' in var_name.lower() or 'opioids.opiates' in var_name.lower():
             return 'Opioids or Opiates Use'
+        if var_name == 'all_types_drug_use':
+            return 'Any Types of Drug Use (non-Rx)'
         if var_name == 'marijuana':
             return 'Marijuana Use'
         if var_name == 'alcohol':
