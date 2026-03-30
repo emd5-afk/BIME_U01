@@ -1,3 +1,5 @@
 [user]
 	name = emd5
 	email = emd5@uw.edu
+[safe]
+	directory = /edata/obdw/sandwich_analysis_data
