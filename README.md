@@ -36,7 +36,39 @@ This repository contains code for analyzing speech and coherence data from parti
 - **WER (Word Error Rate)**: log-transformed
 - **Coherence**: Sentence coherence using SentBERT cumulative centroid
 
-## Requirements
+## SSH Setup (BRAGI Server / VSCode Remote)
+
+If VSCode repeatedly prompts for a password when connecting to BRAGI, follow these steps:
+
+### 1. Generate an SSH key on your local machine (run once)
+```bash
+ssh-keygen -t ed25519 -C "your_netid@uw.edu"
+# Accept the default path (~/.ssh/id_ed25519) and set a passphrase.
+```
+
+### 2. Copy your public key to the BRAGI server
+```bash
+ssh-copy-id your_netid@bragi.uw.edu
+# Enter your password once; future logins will use the key.
+```
+
+### 3. Configure your local SSH client (`~/.ssh/config`)
+Add the following on your **local** machine:
+```
+Host bragi.uw.edu
+    IdentityFile ~/.ssh/id_ed25519
+    AddKeysToAgent yes
+```
+
+### 4. Why it works
+- The `~/.ssh/config` checked into this repo sets `AddKeysToAgent yes` and
+  keepalive options **on BRAGI** so that outbound SSH connections from the
+  server also stay authenticated.
+- The `~/.bashrc` in this repo auto-starts `ssh-agent` on login so that
+  `SSH_AUTH_SOCK` is always populated (it was empty before, causing the
+  repeated password prompts visible in the VSCode terminal).
+
+
 
 ### Python
 - pandas

@@ -116,6 +116,27 @@ if ! shopt -oq posix; then
   fi
 fi
 
+# SSH agent auto-start: ensures SSH_AUTH_SOCK is set so VSCode remote connections
+# do not repeatedly prompt for a password.
+SSH_ENV="$HOME/.ssh/agent_env"
+
+function _start_ssh_agent {
+    ssh-agent | sed 's/^echo/#echo/' > "${SSH_ENV}"
+    chmod 600 "${SSH_ENV}"
+    . "${SSH_ENV}" > /dev/null
+    ssh-add
+}
+
+if [ -f "${SSH_ENV}" ]; then
+    . "${SSH_ENV}" > /dev/null
+    # Verify SSH_AGENT_PID is set and the agent process is still alive
+    if [ -z "${SSH_AGENT_PID}" ] || ! kill -0 "${SSH_AGENT_PID}" 2>/dev/null; then
+        _start_ssh_agent
+    fi
+else
+    _start_ssh_agent
+fi
+
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
 __conda_setup="$('/home/NETID/emd5/miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"

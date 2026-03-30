@@ -52,8 +52,12 @@ output_graphs/
 Thumbs.db
 *.log
 
-# SSH keys
-.ssh/
+# SSH keys and agent state (never commit private keys or agent env)
+.ssh/id_*
+.ssh/known_hosts
+.ssh/agent_env
+# Track only the SSH client config
+!.ssh/config
 
 # Cache directories
 .cache/
