@@ -265,6 +265,8 @@ def decode_variable_name(var_name):
         # Handle clinical measures
         if 'phq9' in var_name.lower():
             return 'PHQ-9 Total'
+        if 'phq9_high' in var_name.lower():
+            return 'PHQ-9 Total High'
         if 'hpsvq' in var_name.lower():
             return 'HPSVQ Total'
         if 'scl' in var_name.lower():
