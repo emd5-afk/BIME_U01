@@ -263,10 +263,13 @@ def decode_variable_name(var_name):
             return 'cluster'
         
         # Handle clinical measures
-        if 'phq9' in var_name.lower():
-            return 'PHQ-9 Total'
         if 'phq9_high' in var_name.lower():
             return 'PHQ-9 Total High'
+        if 'phq9_9_suicidal.thoughts' in var_name.lower() or 'phq9-9_suicidal.thoughts' in var_name.lower() or 'phq9_9-suicidal.thoughts' in var_name.lower():
+            return 'PHQ-9 Suicidal Thoughts'
+        if 'phq9' in var_name.lower():
+            return 'PHQ-9 Total'
+
         if 'hpsvq' in var_name.lower():
             return 'HPSVQ Total'
         if 'scl' in var_name.lower():

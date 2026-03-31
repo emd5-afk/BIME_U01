@@ -86,11 +86,53 @@ drop_aliased_predictors <- function(data_df, model_formula, data_name = "data", 
   return(list(data = data_df, dropped = dropped_vars))
 }
 
+# ToDo: Remove
+# Temporarily exclude SCL_clinical from all model datasets.
+remove_scl_clinical <- function(data_df, data_name = "data") {
+  if ("SCL_clinical" %in% names(data_df)) {
+    cat("\nRemoving SCL_clinical from", data_name, "(temporarily disabled).\n")
+    data_df <- data_df[, !(names(data_df) %in% c("SCL_clinical")), drop = FALSE]
+  }
+  return(data_df)
+}
+
+# Replace sentinel 999 values in continuous clinical columns with NA.
+clean_sentinel_values <- function(data_df, data_name = "data", sentinel = 999) {
+  sentinel_cols <- c("scl.avg.global.score", "phq9.total", "hpsvq.total.score")
+  existing_cols <- sentinel_cols[sentinel_cols %in% names(data_df)]
+
+  for (col_name in existing_cols) {
+    col_values <- data_df[[col_name]]
+    if (is.numeric(col_values)) {
+      sentinel_n <- sum(col_values == sentinel, na.rm = TRUE)
+      if (sentinel_n > 0) {
+        cat("\nReplacing", sentinel_n, "sentinel", sentinel, "values with NA in", data_name, "column", col_name, "\n")
+        data_df[[col_name]][col_values == sentinel] <- NA
+      }
+    }
+  }
+
+  return(data_df)
+}
+
+# Shared loader for model dataframes.
+prepare_model_df <- function(csv_path, data_name = "data") {
+  data_df <- read.csv(csv_path)
+  if ("X" %in% names(data_df)) {
+    data_df <- subset(data_df, select = -c(X))
+  }
+  data_df <- remove_scl_clinical(data_df, data_name = data_name)
+  data_df <- clean_sentinel_values(data_df, data_name = data_name)
+  return(data_df)
+}
+
 
 
 # Basic analysis model
-basic_analysis_df = read.csv("/edata/obdw/sandwich_analysis_data/basic_analysis.csv")
-basic_analysis_df <- subset(basic_analysis_df, select = -c(X))
+basic_analysis_df <- prepare_model_df(
+  "/edata/obdw/sandwich_analysis_data/basic_analysis.csv",
+  data_name = "basic_analysis_df"
+)
 
 model <- lm(log_wer ~ . - sentCoherenceSentBertCumulativeCentroid - wer, data=basic_analysis_df);
 results_wer <- coeftest(model, vcov=vcovCL(model, cluster=~pid))
@@ -106,8 +148,10 @@ write.csv(results_coh, "/edata/obdw/sandwich_analysis_data/basic_analysis_coh_co
 
 
 # Basic+ analysis model
-basic_plus_analysis_df = read.csv("/edata/obdw/sandwich_analysis_data/basic_plus_analysis.csv")
-basic_plus_analysis_df <- subset(basic_plus_analysis_df, select = -c(X))
+basic_plus_analysis_df <- prepare_model_df(
+  "/edata/obdw/sandwich_analysis_data/basic_plus_analysis.csv",
+  data_name = "basic_plus_analysis_df"
+)
 
 model <- lm(log_wer ~ . - sentCoherenceSentBertCumulativeCentroid - snr - wer, data=basic_plus_analysis_df);
 results_wer <- coeftest(model, vcov=vcovCL(model, cluster=~pid))
@@ -124,8 +168,10 @@ write.csv(results_coh, "/edata/obdw/sandwich_analysis_data/basic_plus_analysis_c
 
 # Basic+ Clinical model
 
-basic_plus_clinical_analysis_df = read.csv("/edata/obdw/sandwich_analysis_data/basic_plus_clinical_analysis.csv")
-basic_plus_clinical_analysis_df <- subset(basic_plus_clinical_analysis_df, select = -c(X))
+basic_plus_clinical_analysis_df <- prepare_model_df(
+  "/edata/obdw/sandwich_analysis_data/basic_plus_clinical_analysis.csv",
+  data_name = "basic_plus_clinical_analysis_df"
+)
 
 model <- lm(log_wer ~ . - sentCoherenceSentBertCumulativeCentroid - snr - wer, data=basic_plus_clinical_analysis_df);
 results_wer <- coeftest(model, vcov=vcovCL(model, cluster=~pid))
@@ -140,8 +186,10 @@ results_coh <- coeftest(model, vcov=vcovCL(model, cluster=~pid))
 write.csv(results_coh, "/edata/obdw/sandwich_analysis_data/basic_plus_clinical_analysis_coh_coeftest.csv")
 
 #  With SDH 
-basic_plus_clinical_sdh_analysis_df = read.csv("/edata/obdw/sandwich_analysis_data/basic_plus_clinical_sdh_analysis.csv")
-basic_plus_clinical_sdh_analysis_df <- subset(basic_plus_clinical_sdh_analysis_df, select = -c(X))
+basic_plus_clinical_sdh_analysis_df <- prepare_model_df(
+  "/edata/obdw/sandwich_analysis_data/basic_plus_clinical_sdh_analysis.csv",
+  data_name = "basic_plus_clinical_sdh_analysis_df"
+)
 
 model <- lm(log_wer ~ . - sentCoherenceSentBertCumulativeCentroid - snr - wer, data=basic_plus_clinical_sdh_analysis_df);
 results_wer <- coeftest(model, vcov=vcovCL(model, cluster=~pid))
@@ -157,8 +205,10 @@ write.csv(results_coh, "/edata/obdw/sandwich_analysis_data/basic_plus_clinical_s
 
 
 # Basic+ Clinical + SDH + Location model
-location_encoded_df = read.csv("/edata/obdw/sandwich_analysis_data/X_basic_plus_clin_sdh_location_encoded.csv")
-location_encoded_df <- subset(location_encoded_df, select = -c(X))
+location_encoded_df <- prepare_model_df(
+  "/edata/obdw/sandwich_analysis_data/X_basic_plus_clin_sdh_location_encoded.csv",
+  data_name = "location_encoded_df"
+)
 
 # Auto-remove aliased variables before VIF calculation to avoid hard failures.
 location_encoded_model <- drop_aliased_predictors(
@@ -202,8 +252,10 @@ write.csv(results_coh, "/edata/obdw/sandwich_analysis_data/location_encoded_anal
 
 # Basic+ Clinical + SDH + Location Stratified model
 # This model has a lot of variables. 
-location_stratified_df = read.csv("/edata/obdw/sandwich_analysis_data/X_basic_plus_clin_sdh_location_stratified.csv")
-location_stratified_df <- subset(location_stratified_df, select = -c(X))
+location_stratified_df <- prepare_model_df(
+  "/edata/obdw/sandwich_analysis_data/X_basic_plus_clin_sdh_location_stratified.csv",
+  data_name = "location_stratified_df"
+)
 
 model <- lm(log_wer ~ . - sentCoherenceSentBertCumulativeCentroid - wer, data=location_stratified_df);
 results_wer <- coeftest(model, vcov=vcovCL(model, cluster=~pid))
