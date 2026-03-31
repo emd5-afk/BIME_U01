@@ -267,17 +267,28 @@ def decode_variable_name(var_name):
             return 'PHQ-9 Total High'
         if 'phq9_9_suicidal.thoughts' in var_name.lower() or 'phq9-9_suicidal.thoughts' in var_name.lower() or 'phq9_9-suicidal.thoughts' in var_name.lower():
             return 'PHQ-9 Suicidal Thoughts'
-        if 'phq9' in var_name.lower():
+        if 'phq9-total' in var_name.lower() or 'phq9.total' in var_name.lower():
             return 'PHQ-9 Total'
 
         if 'hpsvq' in var_name.lower():
             return 'HPSVQ Total'
         if 'scl' in var_name.lower():
             return 'SCL Global Score'
+        if 'sds_high' in var_name.lower() or 'sds-high' in var_name.lower() or 'sds.high' in var_name.lower():
+            return 'Sheehan Disability Scale High > 21'
+        
+        if 'dx_group_smi' in var_name.lower() or 'dx.group.smi' in var_name.lower():
+            return 'Serious Mental Illness (SMI) Diagnosis'
+        if 'dx_group_substance' in var_name.lower() or 'dx.group.substance' in var_name.lower():
+            return 'Substance Use Disorder Diagnosis'
+        if 'dx_group_ptsd' in var_name.lower() or 'dx.group.ptsd' in var_name.lower():
+            return 'Post-Traumatic Stress Disorder (PTSD) Diagnosis'
+        if 'dx_group_neuro_med' in var_name.lower() or 'dx.group.neuro_med' in var_name.lower():
+            return 'Neurological Diagnosis'
         
         # Handle substance use
         if 'opioids-opiates' in var_name.lower() or 'opioids_opiates_1.0' in var_name.lower() or 'opioids.opiates' in var_name.lower():
-            return 'Opioids or Opiates Use'
+            return 'Opioids or Optiates Use'
         if var_name == 'all_types_drug_use':
             return 'Any Types of Drug Use (non-Rx)'
         if var_name == 'all_types_drug_use_1.0':

@@ -86,15 +86,6 @@ drop_aliased_predictors <- function(data_df, model_formula, data_name = "data", 
   return(list(data = data_df, dropped = dropped_vars))
 }
 
-# ToDo: Remove
-# Temporarily exclude SCL_clinical from all model datasets.
-remove_scl_clinical <- function(data_df, data_name = "data") {
-  if ("SCL_clinical" %in% names(data_df)) {
-    cat("\nRemoving SCL_clinical from", data_name, "(temporarily disabled).\n")
-    data_df <- data_df[, !(names(data_df) %in% c("SCL_clinical")), drop = FALSE]
-  }
-  return(data_df)
-}
 
 # Replace sentinel 999 values in continuous clinical columns with NA.
 clean_sentinel_values <- function(data_df, data_name = "data", sentinel = 999) {
@@ -121,11 +112,9 @@ prepare_model_df <- function(csv_path, data_name = "data") {
   if ("X" %in% names(data_df)) {
     data_df <- subset(data_df, select = -c(X))
   }
-  data_df <- remove_scl_clinical(data_df, data_name = data_name)
   data_df <- clean_sentinel_values(data_df, data_name = data_name)
   return(data_df)
 }
-
 
 
 # Basic analysis model
