@@ -272,8 +272,12 @@ def decode_variable_name(var_name):
 
         if 'hpsvq' in var_name.lower():
             return 'HPSVQ Total'
+        if 'scl9_moderate' in var_name.lower() or 'scl9-moderate' in var_name.lower():
+            return 'SCL-9 Moderate Distress (≥1.0)'
+        if 'scl9_high' in var_name.lower() or 'scl9-high' in var_name.lower():
+            return 'SCL-9 High Distress (≥1.7)'
         if 'scl' in var_name.lower():
-            return 'SCL Global Score'
+            return 'SCL-9 Global Score'
         if 'sds_high' in var_name.lower() or 'sds-high' in var_name.lower() or 'sds.high' in var_name.lower():
             return 'Sheehan Disability Scale High > 21'
         
@@ -288,7 +292,7 @@ def decode_variable_name(var_name):
         
         # Handle substance use
         if 'opioids-opiates' in var_name.lower() or 'opioids_opiates_1.0' in var_name.lower() or 'opioids.opiates' in var_name.lower():
-            return 'Opioids or Optiates Use'
+            return 'Opioids or Opiates Use'
         if var_name == 'all_types_drug_use':
             return 'Any Types of Drug Use (non-Rx)'
         if var_name == 'all_types_drug_use_1.0':
