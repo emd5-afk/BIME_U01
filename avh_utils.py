@@ -265,7 +265,7 @@ def decode_variable_name(var_name):
         # Handle clinical measures
         if 'phq9_high' in var_name.lower():
             return 'PHQ-9 Total High'
-        if 'phq9_9_suicidal.thoughts' in var_name.lower() or 'phq9-9_suicidal.thoughts' in var_name.lower() or 'phq9_9-suicidal.thoughts' in var_name.lower():
+        if 'phq9_9_suicidal.thoughts' in var_name.lower() or 'phq9-9_suicidal.thoughts' in var_name.lower() or 'phq9.9.suicidal.thoughts' in var_name.lower():
             return 'PHQ-9 Suicidal Thoughts'
         if 'phq9-total' in var_name.lower() or 'phq9.total' in var_name.lower():
             return 'PHQ-9 Total'
@@ -289,6 +289,8 @@ def decode_variable_name(var_name):
             return 'Post-Traumatic Stress Disorder (PTSD) Diagnosis'
         if 'dx_group_neuro_med' in var_name.lower() or 'dx.group.neuro_med' in var_name.lower():
             return 'Neurological Diagnosis'
+        if 'dx_group_none' in var_name.lower() or 'dx.group.none' in var_name.lower():
+            return 'No Mental Illness Diagnosis'
         
         # Handle substance use
         if 'opioids-opiates' in var_name.lower() or 'opioids_opiates_1.0' in var_name.lower() or 'opioids.opiates' in var_name.lower():
