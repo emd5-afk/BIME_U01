@@ -170,6 +170,10 @@ def decode_variable_name(var_name):
     str
         The decoded variable name
     """
+    # Normalize for robust string matching (handles quoted/whitespace values from CSV/index sources).
+    var_name = str(var_name).strip().strip('"').strip("'")
+    var_name_lower = var_name.lower()
+
     # Handle special variables
     if var_name == '(Intercept)':
         return 'Intercept'
@@ -178,9 +182,11 @@ def decode_variable_name(var_name):
     if var_name == 'snr':
         return 'Signal-to-Noise Ratio (SNR)'
     if var_name == 'pred_mos':
-        return 'Predicted MOS'
+        return 'Predicted Mean Opinion Score (MOS)'
     if var_name == 'pause_proportion':
         return 'Pause Proportion'
+    if var_name == 'amos':
+        return 'Adjusted Mean Opinion Score (AMOS)'
     
     
     # Handle response variables
@@ -263,38 +269,56 @@ def decode_variable_name(var_name):
             return 'cluster'
         
         # Handle clinical measures
-        if 'phq9_high' in var_name.lower():
+        if 'phq9_high' in var_name_lower:
             return 'PHQ-9 Total High'
-        if 'phq9_9_suicidal.thoughts' in var_name.lower() or 'phq9-9_suicidal.thoughts' in var_name.lower() or 'phq9.9.suicidal.thoughts' in var_name.lower():
+        if 'phq9_9_suicidal.thoughts' in var_name_lower or 'phq9-9_suicidal.thoughts' in var_name_lower or 'phq9.9.suicidal.thoughts' in var_name_lower:
             return 'PHQ-9 Suicidal Thoughts'
-        if 'phq9-total' in var_name.lower() or 'phq9.total' in var_name.lower():
+        if 'phq9-total' in var_name_lower or 'phq9.total' in var_name_lower:
             return 'PHQ-9 Total'
 
-        if 'hpsvq' in var_name.lower():
+        if 'hpsvq' in var_name_lower:
             return 'HPSVQ Total'
-        if 'scl9_moderate' in var_name.lower() or 'scl9-moderate' in var_name.lower():
+        if 'scl9_moderate' in var_name_lower or 'scl9-moderate' in var_name_lower:
             return 'SCL-9 Moderate Distress (≥1.0)'
-        if 'scl9_high' in var_name.lower() or 'scl9-high' in var_name.lower():
+        if 'scl9_high' in var_name_lower or 'scl9-high' in var_name_lower:
             return 'SCL-9 High Distress (≥1.7)'
-        if 'scl' in var_name.lower():
+        if 'scl' in var_name_lower:
             return 'SCL-9 Global Score'
-        if 'sds_high' in var_name.lower() or 'sds-high' in var_name.lower() or 'sds.high' in var_name.lower():
+        if 'sds_high' in var_name_lower or 'sds-high' in var_name_lower or 'sds.high' in var_name_lower:
             return 'Sheehan Disability Scale High > 21'
         
-        if 'dx_group_smi' in var_name.lower() or 'dx.group.smi' in var_name.lower():
+        if 'dx_group_smi' in var_name_lower or 'dx.group.smi' in var_name_lower:
             return 'Serious Mental Illness (SMI) Diagnosis'
-        if 'dx_group_substance' in var_name.lower() or 'dx.group.substance' in var_name.lower():
+        if 'dx_group_substance' in var_name_lower or 'dx.group.substance' in var_name_lower:
             return 'Substance Use Disorder Diagnosis'
-        if 'dx_group_ptsd' in var_name.lower() or 'dx.group.ptsd' in var_name.lower():
+        if 'dx_group_ptsd' in var_name_lower or 'dx.group.ptsd' in var_name_lower:
             return 'Post-Traumatic Stress Disorder (PTSD) Diagnosis'
-        if 'dx_group_neuro_med' in var_name.lower() or 'dx.group.neuro_med' in var_name.lower():
+        if 'dx_group_neuro_med' in var_name_lower or 'dx.group.neuro_med' in var_name_lower:
             return 'Neurological Diagnosis'
-        if 'dx_group_none' in var_name.lower() or 'dx.group.none' in var_name.lower():
+        if 'dx_group_none' in var_name_lower or 'dx.group.none' in var_name_lower:
             return 'No Mental Illness Diagnosis'
         
         # Handle substance use
-        if 'opioids-opiates' in var_name.lower() or 'opioids_opiates_1.0' in var_name.lower() or 'opioids.opiates' in var_name.lower():
+        if 'opioids-opiates' in var_name_lower or 'opioids_opiates_1.0' in var_name_lower or 'opioids.opiates' in var_name_lower:
             return 'Opioids or Opiates Use'
+        if 'all_types_drug_use' in var_name_lower or 'all_types_drug_use_1.0' in var_name_lower:
+            return 'Any Types of Drug Use (non-Rx)'
+        if 'substances_of_interest' in var_name_lower:
+            return 'Substances of Interest Use (Opioids or Heroin)'
+        if 'substance_marijuana' in var_name_lower:
+            return 'Marijuana Use'
+        if 'substance_alcohol' in var_name_lower:
+            return 'Alcohol Use'
+        if 'substance_cocaine' in var_name_lower:
+            return 'Cocaine Use'
+        if 'substance_nicotine' in var_name_lower:
+            return 'Nicotine Use'
+        if 'substance_psychoactive' in var_name_lower:
+            return 'Psychoactive Substance Use (Ketamine or Acid)'
+        if 'substance_stimulant' in var_name_lower:
+            return 'Stimulant Use'
+
+
         if var_name == 'all_types_drug_use':
             return 'Any Types of Drug Use (non-Rx)'
         if var_name == 'all_types_drug_use_1.0':
@@ -314,10 +338,11 @@ def decode_variable_name(var_name):
         if var_name == 'steroids':
             return 'Steroids Use'
         if var_name == 'acid':
-            return 'LSD Use'
+            return 'Acid Use'
         if 'bath-salts' in var_name or 'bath_salts' in var_name:
             return 'Bath Salts Use'
-        
+
+
         # Handle POI (Point of Interest) counts
         if '_count' in var_name:
             base_name = var_name.replace('_count', '').replace('_', ' ').title()
