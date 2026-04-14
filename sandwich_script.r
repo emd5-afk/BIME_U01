@@ -247,6 +247,17 @@ location_stratified_df <- prepare_model_df(
 )
 
 model <- lm(Y_WER ~ . - Y_COH, data=location_stratified_df);
+
+cat("\nChecking for aliased (collinear) coefficients:\n")
+aliased <- alias(model)
+print(aliased)
+if (!is.null(aliased$Complete)) {
+  cat("\nAliased coefficients detected. The following coefficients are perfectly collinear and were dropped from the model:\n")
+  print(rownames(aliased$Complete)[aliased$Complete])
+} else {
+  cat("No aliased coefficients detected.\n")
+}
+
 results_wer <- coeftest(model, vcov=vcovCL(model, cluster=~pid))
 # results_wer_with_counts <- add_obs_counts(results_wer, location_stratified_df)
 # print(results_wer_with_counts)
@@ -257,12 +268,12 @@ write.csv(results_wer, "/edata/obdw/sandwich_analysis_data/location_stratified_a
 # alias_info <- alias(model)
 # print(alias_info)
 
-# # Check for multicollinearity using VIF for location_stratified_df
-# if (!require(car)) install.packages("car")
-# library(car)
-# cat("\nVIF for predictors in location_stratified_df model:\n")
-# print(vif(model))
-# cat("\nVIF > 5 or 10 suggests multicollinearity. Consider removing or combining variables with high VIF.\n")
+# Check for multicollinearity using VIF for location_stratified_df
+if (!require(car)) install.packages("car")
+library(car)
+cat("\nVIF for predictors in location_stratified_df model:\n")
+print(vif(model))
+cat("\nVIF > 5 or 10 suggests multicollinearity. Consider removing or combining variables with high VIF.\n")
 
 model <- lm(Y_COH ~ . - Y_WER, data=location_stratified_df);
 results_coh <- coeftest(model, vcov=vcovCL(model, cluster=~pid))
