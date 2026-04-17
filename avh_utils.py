@@ -185,8 +185,9 @@ def decode_variable_name(var_name):
         return 'Predicted Mean Opinion Score (MOS)'
     if var_name == 'pause_proportion':
         return 'Pause Proportion'
-    if var_name == 'amos':
-        return 'Adjusted Mean Opinion Score (AMOS)'
+    if var_name_lower == 'amos':
+        return 'Audio Mean Opinion Score (AMOS)'
+    
     
     
     # Handle response variables
@@ -276,8 +277,12 @@ def decode_variable_name(var_name):
         if 'phq9-total' in var_name_lower or 'phq9.total' in var_name_lower:
             return 'PHQ-9 Total'
 
-        if 'hpsvq' in var_name_lower:
+        if 'hpsvq_total_score' in var_name_lower:
             return 'HPSVQ Total'
+        if 'hpsvq_voice_score' in var_name_lower:
+            return 'HPSVQ Voice Subscore'
+        if 'hpsvq_distress_score' in var_name_lower:
+            return 'HPSVQ Distress Subscore'
         if 'scl9_moderate' in var_name_lower or 'scl9-moderate' in var_name_lower:
             return 'SCL-9 Moderate Distress (≥1.0)'
         if 'scl9_high' in var_name_lower or 'scl9-high' in var_name_lower:
