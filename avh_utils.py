@@ -277,20 +277,22 @@ def decode_variable_name(var_name):
         if 'phq9-total' in var_name_lower or 'phq9.total' in var_name_lower:
             return 'PHQ-9 Total'
 
-        if 'hpsvq_total_score' in var_name_lower:
+        if 'hpsvq_total_score' in var_name_lower or 'hpsvq.total.score' in var_name_lower:
             return 'HPSVQ Total'
-        if 'hpsvq_voice_score' in var_name_lower:
+        if 'hpsvq_voice_score' in var_name_lower or 'hpsvq.voice.score' in var_name_lower:
             return 'HPSVQ Voice Subscore'
-        if 'hpsvq_distress_score' in var_name_lower:
+        if 'hpsvq_distress_score' in var_name_lower or 'hpsvq.distress.score' in var_name_lower:
             return 'HPSVQ Distress Subscore'
         if 'scl9_moderate' in var_name_lower or 'scl9-moderate' in var_name_lower:
             return 'SCL-9 Moderate Distress (≥1.0)'
-        if 'scl9_high' in var_name_lower or 'scl9-high' in var_name_lower:
+        if 'scl9_high' in var_name_lower or 'scl9-high' in var_name_lower or 'scl9.high' in var_name_lower:
             return 'SCL-9 High Distress (≥1.7)'
-        if 'scl' in var_name_lower:
+        if 'scl-avg-global-score' in var_name_lower or 'scl.avg.global.score' in var_name_lower:
             return 'SCL-9 Global Score'
         if 'sds_high' in var_name_lower or 'sds-high' in var_name_lower or 'sds.high' in var_name_lower:
             return 'Sheehan Disability Scale High > 21'
+        if 'sds_total' in var_name_lower or 'sds-total' in var_name_lower or 'sds.total' in var_name_lower:
+            return 'Sheehan Disability Scale Total Score'
         
         if 'dx_group_smi' in var_name_lower or 'dx.group.smi' in var_name_lower:
             return 'Serious Mental Illness (SMI) Diagnosis'
