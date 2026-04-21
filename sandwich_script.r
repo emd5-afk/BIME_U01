@@ -123,13 +123,13 @@ basic_analysis_df <- prepare_model_df(
   data_name = "basic_analysis_df"
 )
 
-model <- lm(Y_WER ~ . - Y_COH, data=basic_analysis_df);
+model <- lm(Y_WER ~ . - Y_COH - pid, data=basic_analysis_df);
 results_wer <- coeftest(model, vcov=vcovCL(model, cluster=~pid))
 # results_wer_with_counts <- add_obs_counts(results_wer, basic_analysis_df)
 # print(results_wer_with_counts)
 write.csv(results_wer, "/edata/obdw/sandwich_analysis_data/basic_analysis_wer_coeftest.csv")
 
-model <- lm(Y_COH ~ . - Y_WER, data=basic_analysis_df);
+model <- lm(Y_COH ~ . - Y_WER - pid, data=basic_analysis_df);
 results_coh <- coeftest(model, vcov=vcovCL(model, cluster=~pid))
 # results_coh_with_counts <- add_obs_counts(results_coh, basic_analysis_df)
 # print(results_coh_with_counts)
@@ -142,13 +142,13 @@ basic_plus_analysis_df <- prepare_model_df(
   data_name = "basic_plus_analysis_df"
 )
 
-model <- lm(Y_WER ~ . - Y_COH - snr, data=basic_plus_analysis_df);
+model <- lm(Y_WER ~ . - Y_COH - snr - pid, data=basic_plus_analysis_df);
 results_wer <- coeftest(model, vcov=vcovCL(model, cluster=~pid))
 # results_wer_with_counts <- add_obs_counts(results_wer, basic_plus_analysis_df)
 # print(results_wer_with_counts)
 write.csv(results_wer, "/edata/obdw/sandwich_analysis_data/basic_plus_analysis_wer_coeftest.csv")
 
-model <- lm(Y_COH ~ . - Y_WER, data=basic_plus_analysis_df);
+model <- lm(Y_COH ~ . - Y_WER - pid, data=basic_plus_analysis_df);
 results_coh <- coeftest(model, vcov=vcovCL(model, cluster=~pid))
 # results_coh_with_counts <- add_obs_counts(results_coh, basic_plus_analysis_df)
 # print(results_coh_with_counts)
@@ -162,13 +162,13 @@ basic_plus_clinical_analysis_df <- prepare_model_df(
   data_name = "basic_plus_clinical_analysis_df"
 )
 
-model <- lm(Y_WER ~ . - Y_COH - snr, data=basic_plus_clinical_analysis_df);
+model <- lm(Y_WER ~ . - Y_COH - snr - pid, data=basic_plus_clinical_analysis_df);
 results_wer <- coeftest(model, vcov=vcovCL(model, cluster=~pid))
 # results_wer_with_counts <- add_obs_counts(results_wer, basic_plus_clinical_analysis_df)
 # print(results_wer_with_counts)
 write.csv(results_wer, "/edata/obdw/sandwich_analysis_data/basic_plus_clinical_analysis_wer_coeftest.csv")
 
-model <- lm(Y_COH ~ . - Y_WER, data=basic_plus_clinical_analysis_df);
+model <- lm(Y_COH ~ . - Y_WER - pid, data=basic_plus_clinical_analysis_df);
 results_coh <- coeftest(model, vcov=vcovCL(model, cluster=~pid))
 # results_coh_with_counts <- add_obs_counts(results_coh, basic_plus_clinical_analysis_df)
 # print(results_coh_with_counts)
@@ -180,13 +180,13 @@ basic_plus_clinical_sdh_analysis_df <- prepare_model_df(
   data_name = "basic_plus_clinical_sdh_analysis_df"
 )
 
-model <- lm(Y_WER ~ . - Y_COH - snr, data=basic_plus_clinical_sdh_analysis_df);
+model <- lm(Y_WER ~ . - Y_COH - snr - pid, data=basic_plus_clinical_sdh_analysis_df);
 results_wer <- coeftest(model, vcov=vcovCL(model, cluster=~pid))
 # results_wer_with_counts <- add_obs_counts(results_wer, basic_plus_clinical_sdh_analysis_df)
 # print(results_wer_with_counts)
 write.csv(results_wer, "/edata/obdw/sandwich_analysis_data/basic_plus_clinical_sdh_analysis_wer_coeftest.csv")
 
-model <- lm(Y_COH ~ . - Y_WER, data=basic_plus_clinical_sdh_analysis_df);
+model <- lm(Y_COH ~ . - Y_WER - pid, data=basic_plus_clinical_sdh_analysis_df);
 results_coh <- coeftest(model, vcov=vcovCL(model, cluster=~pid))
 # results_coh_with_counts <- add_obs_counts(results_coh, basic_plus_clinical_sdh_analysis_df)
 # print(results_coh_with_counts)
@@ -202,11 +202,11 @@ location_encoded_df <- prepare_model_df(
 # Auto-remove aliased variables before VIF calculation to avoid hard failures.
 location_encoded_model <- drop_aliased_predictors(
   data_df = location_encoded_df,
-  model_formula = Y_WER ~ . - Y_COH - snr,
+  model_formula = Y_WER ~ . - Y_COH - snr - pid,
   data_name = "location_encoded_df"
 )
 location_encoded_df <- location_encoded_model$data
-model <- lm(Y_WER ~ . - Y_COH - snr, data=location_encoded_df)
+model <- lm(Y_WER ~ . - Y_COH - snr - pid, data=location_encoded_df)
 results_wer <- coeftest(model, vcov=vcovCL(model, cluster=~pid))
 # results_wer_with_counts <- add_obs_counts(results_wer, location_encoded_df)
 # print(results_wer_with_counts)
@@ -233,7 +233,7 @@ if (!is.null(vif_results)) {
 }
 cat("\nVIF > 5 or 10 suggests multicollinearity. Consider removing or combining variables with high VIF.\n")
 
-model <- lm(Y_COH ~ . - Y_WER, data=location_encoded_df)
+model <- lm(Y_COH ~ . - Y_WER - pid, data=location_encoded_df)
 results_coh <- coeftest(model, vcov=vcovCL(model, cluster=~pid))
 # results_coh_with_counts <- add_obs_counts(results_coh, location_encoded_df)
 # print(results_coh_with_counts)
@@ -242,11 +242,12 @@ write.csv(results_coh, "/edata/obdw/sandwich_analysis_data/location_encoded_anal
 # Basic+ Clinical + SDH + Location Stratified model
 # This model has a lot of variables. 
 location_stratified_df <- prepare_model_df(
-  "/edata/obdw/sandwich_analysis_data/X_basic_plus_clin_sdh_location_stratified.csv",
+  "/edata/obdw/sandwich_analysis_data/X
+  _basic_plus_clin_sdh_location_stratified.csv",
   data_name = "location_stratified_df"
 )
 
-model <- lm(Y_WER ~ . - Y_COH, data=location_stratified_df);
+model <- lm(Y_WER ~ . - Y_COH - pid, data=location_stratified_df);
 
 cat("\nChecking for aliased (collinear) coefficients:\n")
 aliased <- alias(model)
@@ -275,7 +276,7 @@ cat("\nVIF for predictors in location_stratified_df model:\n")
 print(vif(model))
 cat("\nVIF > 5 or 10 suggests multicollinearity. Consider removing or combining variables with high VIF.\n")
 
-model <- lm(Y_COH ~ . - Y_WER, data=location_stratified_df);
+model <- lm(Y_COH ~ . - Y_WER - pid, data=location_stratified_df);
 results_coh <- coeftest(model, vcov=vcovCL(model, cluster=~pid))
 # results_coh_with_counts <- add_obs_counts(results_coh, location_stratified_df)
 # print(results_coh_with_counts)
