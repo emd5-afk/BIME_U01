@@ -116,6 +116,14 @@ prepare_model_df <- function(csv_path, data_name = "data") {
   return(data_df)
 }
 
+# Build response ~ . formulas while only subtracting terms that exist.
+safe_model_formula <- function(response, data_df, drop_terms = character(0)) {
+  terms_to_drop <- intersect(drop_terms, names(data_df))
+  drop_expr <- if (length(terms_to_drop) > 0) paste(terms_to_drop, collapse = " - ") else ""
+  rhs <- if (nzchar(drop_expr)) paste(".", "-", drop_expr) else "."
+  as.formula(paste(response, "~", rhs))
+}
+
 # Build clustered regression output with robust 95% CI and BH-adjusted q-values.
 clustered_results_table <- function(model, cluster_formula = ~pid) {
   ct <- coeftest(model, vcov = vcovCL(model, cluster = cluster_formula))
@@ -171,7 +179,12 @@ basic_plus_analysis_df <- prepare_model_df(
   data_name = "basic_plus_analysis_df"
 )
 
-model <- lm(Y_WER ~ . - Y_COH - snr - pid, data=basic_plus_analysis_df);
+model_formula_wer <- safe_model_formula(
+  response = "Y_WER",
+  data_df = basic_plus_analysis_df,
+  drop_terms = c("Y_COH", "snr", "pid")
+)
+model <- lm(model_formula_wer, data = basic_plus_analysis_df)
 results_wer <- clustered_results_table(model, cluster_formula = ~pid)
 # results_wer_with_counts <- add_obs_counts(results_wer, basic_plus_analysis_df)
 # print(results_wer_with_counts)
@@ -191,7 +204,12 @@ basic_plus_clinical_analysis_df <- prepare_model_df(
   data_name = "basic_plus_clinical_analysis_df"
 )
 
-model <- lm(Y_WER ~ . - Y_COH - snr - pid, data=basic_plus_clinical_analysis_df);
+model_formula_wer <- safe_model_formula(
+  response = "Y_WER",
+  data_df = basic_plus_clinical_analysis_df,
+  drop_terms = c("Y_COH", "snr", "pid")
+)
+model <- lm(model_formula_wer, data = basic_plus_clinical_analysis_df)
 results_wer <- clustered_results_table(model, cluster_formula = ~pid)
 # results_wer_with_counts <- add_obs_counts(results_wer, basic_plus_clinical_analysis_df)
 # print(results_wer_with_counts)
@@ -209,7 +227,12 @@ basic_plus_clinical_sdh_analysis_df <- prepare_model_df(
   data_name = "basic_plus_clinical_sdh_analysis_df"
 )
 
-model <- lm(Y_WER ~ . - Y_COH - snr - pid, data=basic_plus_clinical_sdh_analysis_df);
+model_formula_wer <- safe_model_formula(
+  response = "Y_WER",
+  data_df = basic_plus_clinical_sdh_analysis_df,
+  drop_terms = c("Y_COH", "snr", "pid")
+)
+model <- lm(model_formula_wer, data = basic_plus_clinical_sdh_analysis_df)
 results_wer <- clustered_results_table(model, cluster_formula = ~pid)
 # results_wer_with_counts <- add_obs_counts(results_wer, basic_plus_clinical_sdh_analysis_df)
 # print(results_wer_with_counts)
@@ -231,11 +254,20 @@ location_encoded_df <- prepare_model_df(
 # Auto-remove aliased variables before VIF calculation to avoid hard failures.
 location_encoded_model <- drop_aliased_predictors(
   data_df = location_encoded_df,
-  model_formula = Y_WER ~ . - Y_COH - snr - pid,
+  model_formula = safe_model_formula(
+    response = "Y_WER",
+    data_df = location_encoded_df,
+    drop_terms = c("Y_COH", "snr", "pid")
+  ),
   data_name = "location_encoded_df"
 )
 location_encoded_df <- location_encoded_model$data
-model <- lm(Y_WER ~ . - Y_COH - snr - pid, data=location_encoded_df)
+model_formula_wer <- safe_model_formula(
+  response = "Y_WER",
+  data_df = location_encoded_df,
+  drop_terms = c("Y_COH", "snr", "pid")
+)
+model <- lm(model_formula_wer, data = location_encoded_df)
 results_wer <- clustered_results_table(model, cluster_formula = ~pid)
 # results_wer_with_counts <- add_obs_counts(results_wer, location_encoded_df)
 # print(results_wer_with_counts)
