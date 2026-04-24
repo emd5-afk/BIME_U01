@@ -1,0 +1,17 @@
+# Core data science
+numpy>=1.19.0
+pandas>=1.2.0
+scikit-learn>=0.24.0
+scipy>=1.5.0
+matplotlib>=3.0.0
+
+# Pause / tsfresh features (pause_coherence pipeline)
+joblib>=1.0.0
+tsfresh>=0.19.0
+
+# Coherence features (pause_coherence pipeline)
+# Install via: pip install coherencecalculator @ https://github.com/WeizheXu/coherencepip/releases/download/v0.2.0/coherencecalculator-0.2.0-py3-none-any.whl
+# coherencecalculator>=0.2.0
+
+# Notebook utilities
+tqdm
