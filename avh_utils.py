@@ -4,6 +4,7 @@ Contains data dictionaries and utility functions used across notebooks
 """
 
 import pandas as pd
+import re
 
 # Data dictionary for decoding variables
 data_dictionary = {
@@ -359,7 +360,7 @@ def decode_variable_name(var_name):
         if var_name == 'cluster_id':
             return 'Geographic Cluster ID'
 
-    # Parse categorical variables (e.g., 'race_2.0' -> 'race', 2; 'binned_age_3.0' -> 'binned_age', 3)
+    # Parse categorical variables (e.g., 'race_2.0', 'gender_1-0', 'binned_age_3').
     # Convert to a string for robustness, some variable names were coming through as int which can't take a .split
     var_name = str(var_name)
     parts = var_name.split('_')
@@ -367,7 +368,16 @@ def decode_variable_name(var_name):
         # Join all but the last part for the category (handles binned_age, etc.)
         category = '_'.join(parts[:-1]).replace('-', '_')
         try:
-            value = float(parts[-1])
+            raw_value = parts[-1]
+
+            # Accept normalized term suffixes where decimal points were converted to hyphens
+            # (e.g., "gender_1-0" -> 1.0, "race_999-0" -> 999.0).
+            if re.fullmatch(r"\d+-\d+", raw_value):
+                numeric_token = raw_value.replace('-', '.')
+            else:
+                numeric_token = raw_value
+
+            value = float(numeric_token)
             if category in data_dictionary:
                 decoded = data_dictionary[category].get(int(value), var_name)
                 return f"{category.replace('_', ' ').title()}: {decoded}"
