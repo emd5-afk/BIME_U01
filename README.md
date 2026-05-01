@@ -23,6 +23,13 @@ This repository contains code for analyzing speech and coherence data from parti
   - Clusters standard errors by participant (pid)
   - Outputs coefficient test results
 
+- **`aim2_analysis_pipeline.R`**: Consolidated Aim 2 analysis pipeline
+  - Primary model: multivariable linear regression with participant-clustered sandwich SEs
+  - Primary exposure: transcript-level WER on log scale (`log_wer`, created if missing)
+  - Prespecified covariates: demographic, clinical, recording-quality, and transcript-level
+  - Sensitivity models: mixed-effects random intercept, plus optional random slope for WER when supported
+  - Writes per-outcome model outputs and a model-status summary file
+
 ## Models
 
 1. **Basic**: Demographics (age, race, gender)
@@ -53,6 +60,23 @@ This repository contains code for analyzing speech and coherence data from parti
 1. Run `primary_data_collection_script.ipynb` to prepare analysis datasets
 2. Execute `sandwich_script.r` to perform regression analyses
 3. Use visualization code in the notebook to generate forest plots
+
+### Aim 2 (Checklist-Aligned) Run
+
+Use the consolidated pipeline to run the checklist-complete Aim 2 workflow:
+
+```bash
+Rscript aim2_analysis_pipeline.R
+```
+
+Optional arguments:
+
+```bash
+Rscript aim2_analysis_pipeline.R \
+  --data=/edata/obdw/sandwich_analysis_data/X_basic_plus_clin_sdh_location_stratified.csv \
+  --out=/edata/obdw/sandwich_analysis_data/aim2_outputs \
+  --outcomes=Y_COH,sentCoherenceSentBertCumulativeCentroid
+```
 
 ## Data
 
